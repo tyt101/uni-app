@@ -1,5 +1,6 @@
 <template>
   <view>
+    <my-search @click = "gotoSearch"></my-search>
     <view class="scroll-view-container">
       <scroll-view scroll-y="true" class="left-scroll" :style="{height:wxh+'px'}">
         <view :class="['left-scroll-view-item',index===active?'active':'']" v-for="(cate,index) in categaryList" @click="activeItem(index)">{{cate.cat_name}}</view>
@@ -13,7 +14,6 @@
             <view class="cate-lv3-img"  v-for="(lv3,i) in cate.children" :key="lv3.cat_id" @click="gotoGoodsList(lv3.cat_id?lv3.cat_id:'')">
               <image :src="lv3.cat_icon" mode="widthFix" />
               <text>{{lv3.cat_name}}</text>
-              <text>{{lv3.cat_id}}</text>
             </view>
           </view>
         </view>
@@ -35,7 +35,7 @@
     },
     onLoad() {
       const sysInfo = uni.getSystemInfoSync();
-      this.wxh = sysInfo.windowHeight
+      this.wxh = sysInfo.windowHeight-50
       this.getCategaryList()
     },
     methods:{
@@ -54,6 +54,11 @@
         console.log(id)
         uni.navigateTo({
           url: '/subpkg/good_list/good_list?cid=' + id
+        })
+      },
+      gotoSearch(){
+        uni.navigateTo({
+          url:'/subpkg/search/search'
         })
       }
     }

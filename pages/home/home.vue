@@ -1,5 +1,8 @@
 <template>
   <view>
+    <view class="search-box">
+      <my-search @click="gotoSearch"></my-search>
+    </view>
     <swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" :circular="true">
       <swiper-item v-for="sl in swiperList" :key="sl.goods_id">
         <navigator class="swiper-item" :url="'/subpkg/goods_detail/goods_detail?goods_id='+sl.goods_id">
@@ -72,12 +75,22 @@
           })
         })
         this.floorList = res.message
+      },
+      gotoSearch(){
+        uni.navigateTo({
+          url:'/subpkg/search/search'
+        })
       }
     }
   }
 </script>
 
 <style lang="scss">
+.search-box{
+  position: sticky;
+  top: 0;
+   z-index: 999;
+}
 swiper{
   height: 330rpx;
   .swiper-item,
