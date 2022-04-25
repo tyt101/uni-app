@@ -5,23 +5,24 @@
     </view>
     
     <view class="sugg-list" v-if="keyList.length!==0">
-      <view  class="sugg-item" v-for="search in keyList" :key="search.goods_id" @click="gotoDetail(search.goods_id)">
+      <view class="sugg-item" v-for="search in keyList" :key="search.goods_id" @click="gotoDetail(search.goods_id)">
         <view class="goods-name">
           {{search.goods_name}}
         </view>
         <uni-icons type="arrowright" size="16"></uni-icons>
       </view>
     </view>
-  
+      
     <view class="history-box" v-else>
       <view class="history-title">
           <text>搜索历史</text>
           <uni-icons type="trash" size="17" @click="clearHistory"></uni-icons>
       </view>
-      <view class="history-list" >
+      <view class="history-list">
         <uni-tag :text="item" v-for="(item,i) in historyList" :key="i" @click="fastSearch(item)"></uni-tag>
       </view>
     </view>
+      
   </view>
 </template>
 
@@ -34,11 +35,12 @@
         keyWord:'',
         keyList:[],
         historyList:[],
+        
       };
     },
     methods:{
       input(e){
-        clearTimeout(this.timer)
+        clearTimeout(this.timer);
         this.timer = setTimeout(()=>{
           this.keyWord = e
           this._getSearch();
@@ -51,14 +53,14 @@
           const {data:res} = await uni.$http.get('/api/public/v1/goods/qsearch', { query: this.keyWord })
           if(res.meta.status!==200) return uni.$showMsg();
           if(res.message.length===0) return uni.$showMsg('占未找到数据');
-          this.keyList = res.message
+          this.keyList = res.message;
           this.saveSearchHistory();
       },
       saveSearchHistory(){
-        this.historyList.unshift(this.keyWord)
+        this.historyList.unshift(this.keyWord);
         // 解决关键词去重(有三种方法)
-        this.historyList = Array.from(new Set(this.historyList))
-        uni.setStorageSync('historyList',JSON.stringify(this.historyList))
+        this.historyList = Array.from(new Set(this.historyList));
+        uni.setStorageSync('historyList',JSON.stringify(this.historyList));
       },
       gotoDetail(id){
         uni.navigateTo({
@@ -73,7 +75,7 @@
       clearHistory(){
         this.historyList=[];
         uni.clearStorage();
-      }
+      },
     },
     onLoad() {
       this.historyList = JSON.parse(uni.getStorageSync('historyList')||'[]')
