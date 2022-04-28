@@ -31,6 +31,7 @@
 </template>
 
 <script>
+  import {mapState,mapMutations,mapGetters} from 'vuex'
   export default {
     data() {
       return {
@@ -42,7 +43,7 @@
           },{
             icon: 'cart',
             text: '购物车',
-            info: 2
+            info: 0
           }
         ],
         buttonGroup: [{
@@ -76,8 +77,20 @@
           urls:this.goodDetailList.pics.map(x => x.pics_big)
         })
       },
+      ...mapMutations('m_cart', ['addToCart']),
       buttonClick(e){
         console.log(e)
+        if(e.content.text==='加入购物车'){
+          const goods={
+            goods_id:this.goods_id,
+            goods_name: this.goodDetailList.goods_name,   // 商品的名称
+            goods_price: this.goodDetailList.goods_price, // 商品的价格
+            goods_count: 1,                           // 商品的数量
+            goods_small_logo: this.goodDetailList.goods_small_logo, // 商品的图片
+            goods_state: true
+          }
+          this.addToCart(goods)
+        }
       },
       onClick(e){
         console.log(e)
@@ -86,6 +99,21 @@
             url:'/pages/cart/cart'
           })
         }
+      }
+    },
+    computed:{
+      ...mapState('m_cart',['cart']),
+      ...mapGetters('m_cart', ['total']),
+    },
+    watch:{
+      total:{
+        handler(newValue){
+          const findResult = this.options.find((x) => x.text === '购物车')
+          if (findResult) {
+            findResult.info = newValue
+          }
+        },
+        immediate: true
       }
     }
   }
