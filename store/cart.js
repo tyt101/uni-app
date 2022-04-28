@@ -1,7 +1,7 @@
 const moduleCart= {
   namespaced: true,
   state:{
-    cart:[]
+    cart:JSON.parse(uni.getStorageSync('cart') || '[]'),
   },
   mutations:{
     addToCart(state,goods){
